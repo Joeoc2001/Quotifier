@@ -11,6 +11,11 @@ pipeline {
                 sh 'mvn -B -DskipTests -Dbuild.number=${BUILD_NUMBER} clean package' 
             }
         }
+        stage('Move Artifacts') { 
+            steps {
+                sh 'cp target/${POM_VERSION} target/Quotifier-LATEST.jar' 
+            }
+        }
     }
     
     post {
