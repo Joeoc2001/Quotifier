@@ -11,7 +11,6 @@ pipeline {
                 withMaven {
                     sh 'mvn -B -DskipTests clean package' 
                 }
-                echo sh(returnStdout: true, script: 'env')
             }
         }
     }
