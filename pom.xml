@@ -6,7 +6,7 @@
 
     <groupId>dev.joeoc</groupId>
     <artifactId>Quotifier</artifactId>
-    <version>0.0.1-r$\{buildNumber}</version>
+    <version>0.0.1-r$\{env.BUILD_NUMBER}</version>
     <build>
         <plugins>
             <plugin>
