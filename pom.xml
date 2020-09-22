@@ -31,6 +31,7 @@
                             <mainClass>dev.joeoc.quotifier.Main</mainClass>
                         </transformer>
                     </transformers>
+                    <minimizeJar>true</minimizeJar>
                 </configuration>
 
                 <executions>

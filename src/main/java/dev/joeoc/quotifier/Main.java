@@ -16,7 +16,7 @@ public class Main {
 
         JDABuilder.createLight(args[0], GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .addEventListeners(new Bot())
-                .setActivity(Activity.of(Activity.ActivityType.CUSTOM_STATUS, "Writing Poetry"))
+                .setActivity(Activity.playing("with Abstract Nouns"))
                 .build();
     }
 }
