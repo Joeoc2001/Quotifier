@@ -1,5 +1,7 @@
 package dev.joeoc.quotifier;
 
+import com.google.common.net.UrlEscapers;
+
 import java.awt.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -62,12 +64,8 @@ public class FontSet {
         return fonts;
     }
 
-    private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
+    private static String encodeValue(String inputString) {
+        return UrlEscapers.urlFragmentEscaper().escape(inputString);
     }
 
     public Font getFont(String name) {
