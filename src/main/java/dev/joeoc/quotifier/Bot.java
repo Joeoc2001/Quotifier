@@ -17,10 +17,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class Bot extends ListenerAdapter {
-    private final Font font;
+    private final FontSet _fontSet;
 
-    public Bot() throws URISyntaxException, IOException, FontFormatException {
-        font = Font.createFont(Font.TRUETYPE_FONT, new File(new URI("https://fonts.google.com/download?family=Rogue%20Script")));
+    public Bot(FontSet fontSet){
+        _fontSet = fontSet;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Bot extends ListenerAdapter {
         BufferedImage image = getBufferedImage(100, 100);
 
         Graphics2D g = image.createGraphics();
-        g.setFont(font);
+        g.setFont(_fontSet.getRandomFont());
         g.drawString(name, 50, 50);
 
         InputStream file;

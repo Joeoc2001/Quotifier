@@ -8,6 +8,7 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws LoginException
@@ -17,13 +18,11 @@ public class Main {
             System.exit(1);
         }
 
-        try {
-            JDABuilder.createLight(args[0], GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
-                    .addEventListeners(new Bot())
-                    .setActivity(Activity.playing("with Abstract Nouns"))
-                    .build();
-        } catch (URISyntaxException | IOException | FontFormatException e) {
-            e.printStackTrace();
-        }
+        FontSet fontSet = new FontSet(List.of("Rogue Script"));
+
+        JDABuilder.createLight(args[0], GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
+                .addEventListeners(new Bot(fontSet))
+                .setActivity(Activity.playing("with Abstract Nouns"))
+                .build();
     }
 }
