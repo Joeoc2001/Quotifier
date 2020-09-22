@@ -18,7 +18,10 @@ public class Main {
             System.exit(1);
         }
 
-        FontSet fontSet = new FontSet(List.of("Rogue Script"));
+        FontSet fontSet = new FontSet(List.of("Exmouth", "Champignon", "Beauty Angelique",
+                "Tangerine", "Scriptina Pro", "Rosabelia Script", "Frutilla Script",
+                "Argentina Script", "Nattalia", "Bandara Signature", "Symphonie CAT",
+                "Balithya", "Angellie Script", "Aureligena Script", "Bellisa"));
 
         JDABuilder.createLight(args[0], GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .addEventListeners(new Bot(fontSet))

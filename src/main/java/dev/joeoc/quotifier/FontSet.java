@@ -1,7 +1,5 @@
 package dev.joeoc.quotifier;
 
-import com.google.common.net.UrlEscapers;
-
 import java.awt.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -32,7 +30,7 @@ public class FontSet {
         HashMap<String, Font> fonts = new HashMap<>();
 
         for (String name: names) {
-            String urlStr = "https://fonts.google.com/download?family=" + encodeValue(name);
+            String urlStr = "https://dl.dafont.com/dl/?f=" + encodeValue(name);
 
             URL url;
             try {
@@ -65,7 +63,7 @@ public class FontSet {
     }
 
     private static String encodeValue(String inputString) {
-        return UrlEscapers.urlFragmentEscaper().escape(inputString);
+        return inputString.toLowerCase().replace(" ", "_");
     }
 
     public Font getFont(String name) {
