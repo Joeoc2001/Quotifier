@@ -45,6 +45,7 @@ public class FontSet {
 
                     OutputStream outStream = new FileOutputStream(cache);
                     outStream.write(fontData);
+                    outStream.close();
                 } catch (IOException e) {
                     System.out.println("Error on getting font from online: ");
                     System.out.println(e.getMessage());
@@ -76,8 +77,6 @@ public class FontSet {
     }
 
     private static byte[] getFontFromZip(InputStream zipData) throws IOException {
-        byte[] buffer = new byte[2048];
-
         try (BufferedInputStream bis = new BufferedInputStream(zipData);
              ZipInputStream stream = new ZipInputStream(bis)) {
 
@@ -88,14 +87,7 @@ public class FontSet {
                     continue;
                 }
 
-                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                    int len;
-                    while ((len = stream.read(buffer)) > 0) {
-                        baos.write(buffer, 0, len);
-                    }
-
-                    return baos.toByteArray();
-                }
+                return StreamReading.readBytes(stream);
             }
         }
 

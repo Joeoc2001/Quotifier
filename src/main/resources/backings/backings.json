@@ -1,0 +1,7 @@
+[
+  {
+    "image": "small_square.bmp",
+    "usableTopLeft": {"x":  150, "y":  160},
+    "usableBottomRight": {"x":  530, "y":  510}
+  }
+]
