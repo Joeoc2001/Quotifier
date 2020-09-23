@@ -5,9 +5,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
-import java.awt.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class Main {
@@ -19,10 +16,10 @@ public class Main {
         }
 
         FontSet fontSet = new FontSet(List.of(
-                "Exmouth"//, "Champignon", "Beauty Angelique",
-                //"Tangerine", "Scriptina Pro", "Rosabelia Script", "Frutilla Script",
-                //"Argentina Script", "Nattalia", "Bandara Signature", "Symphonie CAT",
-                //"Balithya", "Angellie Script", "Aureligena Script", "Bellisa"
+                "Exmouth", "Champignon", "Beauty Angelique",
+                "Tangerine", "Rosabelia Script", "Frutilla Script",
+                "Argentina Script", "Nattalia", "Bandara Signature", "Symphonie CAT",
+                "Balithya", "Angellie Script", "Aureligena Script", "Bellisa"
         ));
 
         JDABuilder.createLight(args[0], GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)

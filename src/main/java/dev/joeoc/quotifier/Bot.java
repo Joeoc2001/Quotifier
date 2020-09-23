@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,13 +53,10 @@ public class Bot extends ListenerAdapter {
         }
 
         String name = messageParts[1];
+        String[] quote = Arrays.copyOfRange(messageParts, 1, messageParts.length - 1);
         name = name.replace("_", " ");
 
-        BufferedImage image = getBufferedImage(100, 100);
-
-        Graphics2D g = image.createGraphics();
-        g.setFont(_fontSet.getRandomFont());
-        g.drawString(name, 50, 50);
+        BufferedImage image = drawQuote(name, quote, 1000, 1000);
 
         InputStream file;
         try {
@@ -69,6 +67,28 @@ public class Bot extends ListenerAdapter {
         }
 
         channel.sendFile(file, "quote.jpg").queue();
+    }
+
+    private BufferedImage drawQuote(String name, String[] quote, int width, int height) {
+        BufferedImage image = getBufferedImage(width, height);
+
+        Graphics2D graphics = image.createGraphics();
+
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+
+        graphics.setPaint(Color.WHITE);
+        graphics.fillRect(0, 0, width, height);
+
+        graphics.setPaint(Color.BLACK);
+        graphics.setFont(_fontSet.getRandomFont().deriveFont(160f));
+        graphics.drawString(name, 50, 950);
+
+        return image;
     }
 
     public static BufferedImage getBufferedImage(int width, int height) {

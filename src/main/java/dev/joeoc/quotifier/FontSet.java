@@ -1,15 +1,15 @@
 package dev.joeoc.quotifier;
 
 import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
+import java.io.*;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class FontSet {
     private final Map<String, Font> fonts;
@@ -30,29 +30,33 @@ public class FontSet {
         HashMap<String, Font> fonts = new HashMap<>();
 
         for (String name: names) {
-            String urlStr = "https://dl.dafont.com/dl/?f=" + encodeValue(name);
+            System.out.println("Processing font " + name);
 
-            URL url;
-            try {
-                url = new URL(urlStr);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                continue;
-            }
+            Path directory = Paths.get("tmp");
+            File cache = new File(directory.toString(), name + ".ttf");
 
-            BufferedInputStream in;
-            try {
-                in = new BufferedInputStream(url.openStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-                continue;
+            if (!cache.exists()) {
+                System.out.println("Not cached");
+                try {
+                    byte[] fontData = getFontFromOnline(name);
+
+                    Files.createDirectories(directory);
+                    cache.createNewFile();
+
+                    OutputStream outStream = new FileOutputStream(cache);
+                    outStream.write(fontData);
+                } catch (IOException e) {
+                    System.out.println("Error on getting font from online: ");
+                    System.out.println(e.getMessage());
+                    continue;
+                }
             }
 
             Font font;
             try {
-                font = Font.createFont(Font.TRUETYPE_FONT, in);
+                font = Font.createFont(Font.TRUETYPE_FONT, cache);
             } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
                 continue;
             }
 
@@ -60,6 +64,42 @@ public class FontSet {
         }
 
         return fonts;
+    }
+
+    private static byte[] getFontFromOnline(String name) throws IOException {
+        String urlStr = "https://dl.dafont.com/dl/?f=" + encodeValue(name);
+
+        URL url = new URL(urlStr);
+        try (BufferedInputStream zipData = new BufferedInputStream(url.openStream())) {
+            return getFontFromZip(zipData);
+        }
+    }
+
+    private static byte[] getFontFromZip(InputStream zipData) throws IOException {
+        byte[] buffer = new byte[2048];
+
+        try (BufferedInputStream bis = new BufferedInputStream(zipData);
+             ZipInputStream stream = new ZipInputStream(bis)) {
+
+            ZipEntry entry;
+            while ((entry = stream.getNextEntry()) != null) {
+
+                if (entry.isDirectory() || !entry.getName().endsWith(".ttf")) {
+                    continue;
+                }
+
+                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                    int len;
+                    while ((len = stream.read(buffer)) > 0) {
+                        baos.write(buffer, 0, len);
+                    }
+
+                    return baos.toByteArray();
+                }
+            }
+        }
+
+        throw new IOException("Zip file had no top level tff file");
     }
 
     private static String encodeValue(String inputString) {
