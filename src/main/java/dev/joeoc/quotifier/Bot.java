@@ -46,47 +46,59 @@ public class Bot extends ListenerAdapter {
             return;
         }
 
-        if (!messageParts[0].equals("~quotify")) {
+        if (messageParts[0].equals("~quotify")) {
+            MessageChannel channel = event.getChannel();
+            respondToQuotify(channel, messageParts);
             return;
         }
+    }
 
-        MessageChannel channel = event.getChannel();
-
+    private void respondToQuotify(MessageChannel channel, String[] messageParts) {
         if (messageParts.length == 1) {
             channel.sendMessage(BotMessages.HowToUse.getRandom()).queue();
             return;
         }
 
-        if (messageParts.length >= 50 || message.length() >= 250) {
+        String name = messageParts[1].replace("_", " ");
+        String quote = String.join(" ", Arrays.copyOfRange(messageParts, 2, messageParts.length));
+
+        if (messageParts.length >= 50 || quote.length() >= 250) {
             channel.sendMessage(BotMessages.TooLong.getRandom()).queue();
             return;
         }
 
-        String name = messageParts[1];
-        String[] quote = Arrays.copyOfRange(messageParts, 2, messageParts.length);
-        name = name.replace("_", " ");
-
-        InputStream file;
-        try {
-            BufferedImage image = drawQuote(name, quote);
-            file = getStreamFromBuffer(image);
-        } catch (IOException | RuntimeException e) {
-            e.printStackTrace();
-            channel.sendMessage("My apologies, something went wrong while building your quote: " + e.getMessage()).queue();
-            return;
-        }
-
-        channel.sendFile(file, "quote." + extension).queue(
-                message1 -> message1.getChannel().sendMessage(BotMessages.Success.getRandom()).queue()
-        );
-    }
-
-    private BufferedImage drawQuote(String name, String[] quote) throws IOException {
-        String[] paragraphs = new String[] {
-                String.join(" ", quote),
+        final String[] paragraphs = new String[] {
+                quote,
                 "~ " + name,
         };
 
+        channel.sendMessage(BotMessages.Pending.getRandom()).queue(
+                message1 -> makeAndSend(channel, paragraphs)
+        );
+    }
+
+    private void makeAndSend(MessageChannel channel, String[] paragraphs) {
+        InputStream file;
+        try {
+            file = makeQuoteFile(paragraphs);
+        } catch (IOException | RuntimeException e) {
+            e.printStackTrace();
+            channel.sendMessage(BotMessages.Failure.getRandom()).queue();
+            channel.sendMessage(e.getMessage()).queue();
+            throw new RuntimeException(e);
+        }
+
+        channel.sendFile(file, "quote." + extension).queue(
+                message2 -> channel.sendMessage(BotMessages.Success.getRandom()).queue()
+        );
+    }
+
+    private InputStream makeQuoteFile(String[] paragraphs) throws IOException {
+        BufferedImage image = drawQuote(paragraphs);
+        return getStreamFromBuffer(image);
+    }
+
+    private BufferedImage drawQuote(String[] paragraphs) throws IOException {
         Backing backing = backingSet.getRandomBacking();
         BufferedImage image = backing.getImage();
         Graphics2D graphics = getGraphics2D(image);

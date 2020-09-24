@@ -26,8 +26,8 @@
   },
   {
     "image": "6.png",
-    "usableTopLeft": {"x":  0, "y":  190},
-    "usableBottomRight": {"x":  934, "y":  644}
+    "usableTopLeft": {"x":  60, "y":  190},
+    "usableBottomRight": {"x":  874, "y":  644}
   },
   {
     "image": "7.png",

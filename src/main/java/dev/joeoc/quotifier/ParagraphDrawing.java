@@ -19,7 +19,7 @@ public class ParagraphDrawing {
         float x = topLeft.x;
         float y = topLeft.y;
 
-        float lineHeight = totalHeight / paragraph.size();
+        float lineHeight = (totalHeight + metrics.getLeading()) / paragraph.size();
         float ascent = metrics.getAscent();
 
         y += ascent;
