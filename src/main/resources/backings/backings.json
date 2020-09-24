@@ -1,7 +1,37 @@
 [
   {
-    "image": "small_square.png",
+    "image": "1.png",
+    "usableTopLeft": {"x":  88, "y":  105},
+    "usableBottomRight": {"x":  885, "y":  645}
+  },
+  {
+    "image": "2.png",
     "usableTopLeft": {"x":  137, "y":  137},
-    "usableBottomRight": {"x":  543, "y":  543}
+    "usableBottomRight": {"x":  838, "y":  612}
+  },
+  {
+    "image": "3.png",
+    "usableTopLeft": {"x":  120, "y":  120},
+    "usableBottomRight": {"x":  815, "y":  419}
+  },
+  {
+    "image": "4.png",
+    "usableTopLeft": {"x":  233, "y":  233},
+    "usableBottomRight": {"x":  880, "y":  677}
+  },
+  {
+    "image": "5.png",
+    "usableTopLeft": {"x":  45, "y":  25},
+    "usableBottomRight": {"x":  833, "y":  413}
+  },
+  {
+    "image": "6.png",
+    "usableTopLeft": {"x":  0, "y":  190},
+    "usableBottomRight": {"x":  934, "y":  644}
+  },
+  {
+    "image": "7.png",
+    "usableTopLeft": {"x":  148, "y":  114},
+    "usableBottomRight": {"x":  656, "y":  697}
   }
 ]

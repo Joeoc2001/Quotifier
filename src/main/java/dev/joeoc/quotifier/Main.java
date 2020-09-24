@@ -16,10 +16,7 @@ public class Main {
         }
 
         FontSet fontSet = new FontSet(List.of(
-                "Exmouth", "Champignon", "Beauty Angelique",
-                "Tangerine", "Rosabelia Script", "Frutilla Script",
-                "Nattalia", "Bandara Signature",
-                "Angellie Script", "Aureligena Script", "Bellisa"
+                "Exmouth", "Champignon", "Tangerine", "Rosabelia Script", "Frutilla Script", "Nattalia", "Angellie Script", "Aureligena Script", "Bellisa"
         ));
 
         BackingSet backingSet = new BackingSet();

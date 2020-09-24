@@ -83,15 +83,22 @@ public class Bot extends ListenerAdapter {
         String[] paragraphs = new String[] {
                 String.join(" ", quote),
                 "- " + name,
-                LocalDate.now().format(DateTimeFormatter.ISO_DATE)
+                //LocalDate.now().format(DateTimeFormatter.ISO_DATE),
         };
 
         Backing backing = backingSet.getRandomBacking();
         BufferedImage image = backing.getImage();
         Graphics2D graphics = getGraphics2D(image);
+        graphics.setPaint(Color.BLACK);
 
         Font font = fontSet.getRandomFont();
-        graphics.setPaint(Color.BLACK);
+
+        for (String paragraph: paragraphs) {
+            int displayUpTo = font.canDisplayUpTo(paragraph);
+            if (displayUpTo != -1) {
+                throw new RuntimeException("Unsupported character: " + paragraph.charAt(displayUpTo));
+            }
+        }
 
         float fontSize = 300f;
         graphics.setFont(font.deriveFont(fontSize));
