@@ -36,17 +36,12 @@ public class Bot extends ListenerAdapter {
 
         String message = msg.getContentRaw();
 
-        // If not a message for this bot
-        if (!message.startsWith("~quotify")) {
-            return;
-        }
-
         String[] messageParts = message.split("\\s");
         if (messageParts.length == 0) {
             return;
         }
 
-        if (messageParts[0].equals("~quotify")) {
+        if (messageParts[0].matches("^[~!-]quotify$")) {
             MessageChannel channel = event.getChannel();
             respondToQuotify(channel, messageParts);
             return;
