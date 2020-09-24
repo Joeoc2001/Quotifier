@@ -39,4 +39,12 @@ public class Backing {
     public Point getUsableBottomRight() {
         return usableBottomRight;
     }
+
+    public int getUsableWidth() {
+        return usableBottomRight.x - usableTopLeft.x;
+    }
+
+    public int getUsableHeight() {
+        return usableBottomRight.y - usableTopLeft.y;
+    }
 }
