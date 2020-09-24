@@ -8,6 +8,7 @@ import java.util.List;
  * Globally available utility classes, mostly for string manipulation.
  *
  * @author Jim Menard, <a href="mailto:jimm@io.com">jimm@io.com</a>
+ * Fixed by Joe O'Connor -> findBreakAfter should never return -1 for expected behavior
  */
 public class StringUtils {
     /**
@@ -68,11 +69,11 @@ public class StringUtils {
             }
             else { // Too short or possibly just right
                 pos = findBreakAfter(line, guess);
-                if (pos != -1) { // Make sure this doesn't make us too long
-                    before = line.substring(0, pos).trim();
-                    if (fm.stringWidth(before) > maxWidth) {
-                        pos = findBreakBefore(line, guess);
-                    }
+
+                // Make sure this doesn't make us too long
+                before = line.substring(0, pos).trim();
+                if (fm.stringWidth(before) > maxWidth) {
+                    pos = findBreakBefore(line, guess);
                 }
             }
             if (pos == -1) {
@@ -110,7 +111,7 @@ public class StringUtils {
 
     /**
      * Returns the index of the first whitespace character or '-' in <var>line</var>
-     * that is at or after <var>start</var>. Returns -1 if no such character is
+     * that is at or after <var>start</var>. Returns line.length() if no such character is
      * found.
      *
      * @param line
@@ -126,7 +127,7 @@ public class StringUtils {
                 return i;
             }
         }
-        return -1;
+        return line.length();
     }
     /**
      * Returns an array of strings, one for each line in the string. Lines end

@@ -90,14 +90,13 @@ public class Bot extends ListenerAdapter {
         BufferedImage image = backing.getImage();
         Graphics2D graphics = getGraphics2D(image);
 
-        //Font baseFont = fontSet.getRandomFont();
-        Font font = graphics.getFont();//baseFont.deriveFont(160f);
+        Font font = fontSet.getRandomFont();
         graphics.setPaint(Color.BLACK);
 
-        float fontSize = 180f;
+        float fontSize = 300f;
         graphics.setFont(font.deriveFont(fontSize));
-        while(!tryDrawQuote(graphics, backing, paragraphs)) {
-            fontSize *= 0.75f;
+        while(!tryDrawQuote(graphics, backing, paragraphs, 20)) {
+            fontSize *= 0.9f;
 
             if (fontSize <= 5f) {
                 throw new RuntimeException("Font size hit 5 without text fitting");
@@ -110,29 +109,33 @@ public class Bot extends ListenerAdapter {
         return image;
     }
 
-    private boolean tryDrawQuote(Graphics2D graphics, Backing backing, String[] paragraphs) {
+    private boolean tryDrawQuote(Graphics2D graphics, Backing backing, String[] paragraphs, int padding) {
         FontMetrics metrics = graphics.getFontMetrics();
 
-        int usableWidth = backing.getUsableWidth();
-        java.util.List<String> lines = new java.util.ArrayList<>();
-        for (String paragraph : paragraphs) {
-            lines.addAll(StringUtils.wrap(paragraph, metrics, usableWidth));
-        }
+        int usableWidth = backing.getUsableWidth() - 2 * padding;
+        int usableHeight = backing.getUsableHeight() - 2 * padding;
 
-        int usableHeight = backing.getUsableHeight();
         float lineHeight = metrics.getHeight();
-        float totalHeight = lines.size() * lineHeight;
 
-        if (totalHeight > usableHeight) {
-            return false;
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        float totalHeight = 0;
+        for (String paragraph : paragraphs) {
+            java.util.List<String> newLines = StringUtils.wrap(paragraph, metrics, usableWidth);
+
+            totalHeight += newLines.size() * lineHeight;
+            if (totalHeight > usableHeight) {
+                return false;
+            }
+
+            lines.addAll(newLines);
         }
 
-        drawParagraph(graphics, lines, backing.getUsableTopLeft());
+        drawParagraph(graphics, lines, backing.getUsableTopLeft(), padding);
 
         return true;
     }
 
-    public static void drawParagraph(Graphics2D graphics, java.util.List<String> paragraph, Point topLeft) {
+    public static void drawParagraph(Graphics2D graphics, java.util.List<String> paragraph, Point topLeft, float padding) {
         float x = topLeft.x;
         float y = topLeft.y;
 
@@ -142,7 +145,7 @@ public class Bot extends ListenerAdapter {
 
         y += ascent;
         for (String line : paragraph) {
-            graphics.drawString(line, x, y);
+            graphics.drawString(line, x + padding, y + padding);
             y += lineHeight;
         }
     }
