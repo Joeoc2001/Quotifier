@@ -64,16 +64,29 @@ public class BotMessages {
             "authentic"
     ));
 
+    private static final MessageBag adjectiveInspiringExtension = new MessageBag(
+            List.of(
+                    "",
+                    "It's just so {adjective_inspiring}.",
+                    "It's very {adjective_inspiring}.",
+                    "You've created something that's quite {adjective_inspiring}."
+            ),
+            Map.of(
+                    "adjective_inspiring", adjectiveInspiring
+            )
+    );
+
     public static final MessageBag Success = new MessageBag(
             List.of(
-                    "I think I might {action_hang} that one on my {place_wall}. It's just so {adjective_inspiring}.",
+                    "I think I might {action_hang} that one on my {place_wall}. {adjective_inspiring_extension}",
                     "How {adjective_inspiring}.",
                     "How very {adjective_inspiring}!"
             ),
             Map.of(
                     "action_hang", actionHang,
                     "place_wall", placeWall,
-                    "adjective_inspiring", adjectiveInspiring
+                    "adjective_inspiring", adjectiveInspiring,
+                    "adjective_inspiring_extension", adjectiveInspiringExtension
             )
     );
 }
