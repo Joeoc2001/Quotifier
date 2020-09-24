@@ -53,11 +53,11 @@ public class Bot extends ListenerAdapter {
         MessageChannel channel = event.getChannel();
 
         if (messageParts.length == 1) {
-            channel.sendMessage("[INFO]").queue();
+            channel.sendMessage(BotMessages.HowToUse.getRandom()).queue();
             return;
         }
 
-        if (messageParts.length >= 100) {
+        if (messageParts.length >= 50 || message.length() >= 250) {
             channel.sendMessage(BotMessages.TooLong.getRandom()).queue();
             return;
         }
@@ -76,13 +76,15 @@ public class Bot extends ListenerAdapter {
             return;
         }
 
-        channel.sendFile(file, "quote." + extension).queue();
+        channel.sendFile(file, "quote." + extension).queue(
+                message1 -> message1.getChannel().sendMessage(BotMessages.Success.getRandom()).queue()
+        );
     }
 
     private BufferedImage drawQuote(String name, String[] quote) throws IOException {
         String[] paragraphs = new String[] {
                 String.join(" ", quote),
-                "~ " + name + ", " + LocalDate.now().getYear(),
+                "~ " + name,
         };
 
         Backing backing = backingSet.getRandomBacking();
@@ -95,7 +97,7 @@ public class Bot extends ListenerAdapter {
         for (String paragraph: paragraphs) {
             int displayUpTo = font.canDisplayUpTo(paragraph);
             if (displayUpTo != -1) {
-                throw new RuntimeException("Unsupported character: " + paragraph.charAt(displayUpTo) + " in font " + font.getName());
+                throw new RuntimeException("Unsupported character: '" + paragraph.charAt(displayUpTo) + "' in font " + font.getName());
             }
         }
 
