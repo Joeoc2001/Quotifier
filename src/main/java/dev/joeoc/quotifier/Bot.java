@@ -82,8 +82,7 @@ public class Bot extends ListenerAdapter {
     private BufferedImage drawQuote(String name, String[] quote) throws IOException {
         String[] paragraphs = new String[] {
                 String.join(" ", quote),
-                "- " + name,
-                //LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+                "~ " + name + ", " + LocalDate.now().getYear(),
         };
 
         Backing backing = backingSet.getRandomBacking();
@@ -96,7 +95,7 @@ public class Bot extends ListenerAdapter {
         for (String paragraph: paragraphs) {
             int displayUpTo = font.canDisplayUpTo(paragraph);
             if (displayUpTo != -1) {
-                throw new RuntimeException("Unsupported character: " + paragraph.charAt(displayUpTo));
+                throw new RuntimeException("Unsupported character: " + paragraph.charAt(displayUpTo) + " in font " + font.getName());
             }
         }
 
@@ -137,24 +136,13 @@ public class Bot extends ListenerAdapter {
             lines.addAll(newLines);
         }
 
-        drawParagraph(graphics, lines, backing.getUsableTopLeft(), padding);
+        Point topLeft = backing.getUsableTopLeft();
+        topLeft.translate(padding, padding);
+        Point bottomRight = backing.getUsableBottomRight();
+        bottomRight.translate(-padding, -padding);
+        ParagraphDrawing.drawParagraph(graphics, lines, topLeft, bottomRight);
 
         return true;
-    }
-
-    public static void drawParagraph(Graphics2D graphics, java.util.List<String> paragraph, Point topLeft, float padding) {
-        float x = topLeft.x;
-        float y = topLeft.y;
-
-        FontMetrics metrics = graphics.getFontMetrics();
-        float lineHeight = metrics.getHeight();
-        float ascent = metrics.getAscent();
-
-        y += ascent;
-        for (String line : paragraph) {
-            graphics.drawString(line, x + padding, y + padding);
-            y += lineHeight;
-        }
     }
 
     public static Graphics2D getGraphics2D(BufferedImage image) {
