@@ -1,16 +1,24 @@
 package dev.joeoc.quotifier;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.*;
 
 public class Backing {
-    public String image;
-    public Point usableTopLeft;
-    public Point usableBottomRight;
+    private final String image;
+    private final Point usableTopLeft;
+    private final Point usableBottomRight;
+
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Backing(@JsonProperty("image") String image, @JsonProperty("usableTopLeft") Point usableTopLeft, @JsonProperty("usableBottomRight") Point usableBottomRight) {
+        this.image = image;
+        this.usableTopLeft = usableTopLeft;
+        this.usableBottomRight = usableBottomRight;
+    }
 
     public BufferedImage getImage() throws IOException {
         InputStream stream = getClass().getResourceAsStream("/backings/" + image);
@@ -33,11 +41,11 @@ public class Backing {
     }
 
     public Point getUsableTopLeft() {
-        return usableTopLeft;
+        return new Point(usableTopLeft);
     }
 
     public Point getUsableBottomRight() {
-        return usableBottomRight;
+        return new Point(usableBottomRight);
     }
 
     public int getUsableWidth() {
