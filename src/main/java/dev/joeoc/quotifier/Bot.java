@@ -12,9 +12,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class Bot extends ListenerAdapter {
+    private static final Random random = new Random();
+
     private final FontSet fontSet;
     private final BackingSet backingSet;
 
@@ -67,9 +71,7 @@ public class Bot extends ListenerAdapter {
                 "~ " + name,
         };
 
-        channel.sendMessage(BotMessages.Pending.getRandom()).queue(
-                message1 -> makeAndSend(channel, paragraphs)
-        );
+        makeAndSend(channel, paragraphs);
     }
 
     private void makeAndSend(MessageChannel channel, String[] paragraphs) {
@@ -78,14 +80,14 @@ public class Bot extends ListenerAdapter {
             file = makeQuoteFile(paragraphs);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
-            channel.sendMessage(BotMessages.Failure.getRandom()).queue();
-            channel.sendMessage(e.getMessage()).queue();
+            channel.sendMessage(BotMessages.Failure.getRandom() + "\n" + e.getMessage()).queue();
             throw new RuntimeException(e);
         }
 
-        channel.sendFile(file, "quote." + extension).queue(
-                message2 -> channel.sendMessage(BotMessages.Success.getRandom()).queue()
-        );
+        channel.sendMessage(BotMessages.Success.getRandom())
+                .addFile(file, "quote." + extension)
+                .timeout(random.nextInt(5000), TimeUnit.MILLISECONDS)
+                .queue();
     }
 
     private InputStream makeQuoteFile(String[] paragraphs) throws IOException {
